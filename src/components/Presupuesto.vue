@@ -5,14 +5,17 @@ import Alerta from "./Alerta.vue";
 const presupuesto = ref(0);
 const error = ref('');
 
+const emit = defineEmits(['definir-presupuesto']);
 const definirPresupuesto = () => {
-    if (presupuesto.value <= 0) {
-        error.value = "Presupuesto no válido"
+    if (presupuesto.value <= 0 || presupuesto.value === '') {
+        error.value = 'Presupuesto no válido'
+        setTimeout(() => {
+            error.value = ''
+        }, 3000);
+        return
     }
-    setTimeout(()=>{
-        error.value= " ";
-    },3000);
-    
+
+    emit('definir-presupuesto', presupuesto.value)
 }
 </script>
 
@@ -21,6 +24,7 @@ const definirPresupuesto = () => {
         <Alerta v-if="error">
             {{ error }}
         </Alerta>
+
         <div class="campo">
             <label for="nuevo-presupuesto">Definir presupuesto</label>
             <input type="number" id="nuevo-presupuesto" class="nuevo-presupuesto" placeholder="Añade tu presupuesto"
