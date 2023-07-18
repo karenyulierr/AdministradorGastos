@@ -3,6 +3,8 @@ import { ref, reactive } from 'vue';
 import Presupuesto from "./components/Presupuesto.vue";
 import ControlPresupuesto from "./components/ControlPresupuesto.vue";
 import Modal from "./components/Modal.vue";
+import Gasto from "./components/Gasto.vue";
+import { generarId } from "../helpers";
 import inconoNuevoGasto from './assets/img/nuevo-gasto.svg';
 
 const modal = reactive({
@@ -11,6 +13,15 @@ const modal = reactive({
 })
 const presupuesto = ref(0);
 const disponible = ref(0);
+const gasto = reactive({
+  nombre: '',
+  cantidad: '',
+  categoria: '',
+  id: null,
+  fecha: Date.now()
+})
+
+const gastos = ref([]);
 
 const definirPresupuesto = (cantidad) => {
   presupuesto.value = cantidad;
@@ -31,10 +42,30 @@ const ocultarModal = () => {
   }, 300);
 }
 
+const guardarGasto = () => {
+  gastos.value.push({
+    ...gasto,
+    id: generarId(),
+  })
+
+  ocultarModal();
+
+  //Reinicar el objecto
+  Object.assign(gasto, {
+    nombre: '',
+    cantidad: '',
+    categoria: '',
+    id: null,
+    fecha: Date.now()
+  })
+
+
+}
+
 </script>
 
 <template>
-  <div>
+  <div :class="{ fijar: modal.mostrar }">
     <header>
       <h1>Planificador de Gastos</h1>
       <div class="contenedor-header contenedor sombra">
@@ -44,11 +75,16 @@ const ocultarModal = () => {
     </header>
 
     <main v-if="presupuesto > 0">
+      <div class="listado-gasto contenedor">
+        <h2>{{ gastos.length > 0 ? 'Gastos' : 'No hay gastos' }}</h2>
+        <Gasto v-for="gasto in gastos" :key="gasto.id" :gasto="gasto" />
+      </div>
       <div class="crear-gasto">
         <img :src="inconoNuevoGasto" alt="Icono nuevo gasto" @click="mostrarModal">
       </div>
 
-      <Modal v-if="modal.mostrar" @ocultar-modal="ocultarModal" :modal="modal"/>
+      <Modal v-if="modal.mostrar" @ocultar-modal="ocultarModal" @guardar-gasto="guardarGasto" :modal="modal"
+        v-model:nombre="gasto.nombre" v-model:cantidad="gasto.cantidad" v-model:categoria="gasto.categoria" />
     </main>
   </div>
 </template>
@@ -88,6 +124,11 @@ h1 {
 
 h2 {
   font-size: 3rem;
+}
+
+.fijar {
+  overflow: hidden;
+  height: 100vh;
 }
 
 header {
@@ -130,5 +171,15 @@ header h1 {
 .crear-gasto img {
   width: 5rem;
   cursor: pointer;
+}
+
+.listado-gasto {
+  margin-top: 10rem;
+}
+
+.listado-gasto h2 {
+  font-weight: 900;
+  color: var(--gris-oscuro);
+
 }
 </style>
