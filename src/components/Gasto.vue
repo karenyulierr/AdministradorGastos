@@ -26,6 +26,7 @@ const props = defineProps({
         required: true,
     }
 });
+defineEmits(['seleccionar-gasto']);
 </script>
 
 <template>
@@ -34,7 +35,7 @@ const props = defineProps({
             <img :src="diccionarioIconos[gasto.categoria]" alt="Incono gasto" class="icono">
             <div class="detalles">
                 <p class="categoria">{{ gasto.categoria }}</p>
-                <p class="nombre">{{ gasto.nombre }}</p>
+                <p class="nombre" @click="$emit('seleccionar-gasto', gasto.id)">{{ gasto.nombre }}</p>
                 <p class="fecha">
                     Fecha: <span>{{ formatearFecha(gasto.fecha) }}</span> </p>
             </div>
@@ -44,47 +45,55 @@ const props = defineProps({
 </template>
 
 <style  scoped>
-    .gasto{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 2rem;
-    }
-    .contenido{
-        display: flex;
-        align-items: center;
-        gap: 2rem;
-    }
-    .icono{
-        width: 5rem;
-    }
-    .detalles p{
-        margin: 0 0 1rem 0;
-    }
-    .categoria{
-        color: var(--gris);
-        font-size: 1.2rem;
-        text-transform: uppercase;
-        font-weight: 900;
-    }
-    .nombre{
-        color: var(--gris-oscuro);
-        font-size: 2.4rem;
-        font-weight: 700;
-        cursor: pointer;
+.gasto {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
 
-    }
-    .fecha{
-        font-size: 1.6rem;
-        font-weight: 900;
-        color: var(--gris-oscuro);
-    }
-    .fecha span{
-        font-weight: 400;
-    }
-    .cantidad{
-        font-size: 3rem;
-        font-weight: 900;
-        margin: 0;
-    }
+.contenido {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.icono {
+    width: 5rem;
+}
+
+.detalles p {
+    margin: 0 0 1rem 0;
+}
+
+.categoria {
+    color: var(--gris);
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    font-weight: 900;
+}
+
+.nombre {
+    color: var(--gris-oscuro);
+    font-size: 2.4rem;
+    font-weight: 700;
+    cursor: pointer;
+
+}
+
+.fecha {
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: var(--gris-oscuro);
+}
+
+.fecha span {
+    font-weight: 400;
+}
+
+.cantidad {
+    font-size: 3rem;
+    font-weight: 900;
+    margin: 0;
+}
 </style>
